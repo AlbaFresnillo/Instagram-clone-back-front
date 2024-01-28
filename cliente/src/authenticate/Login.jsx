@@ -1,15 +1,30 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { auth } from "../firebase";
+import { useUserContext } from "../features/userContext";
+import axios from 'axios';
 import "./Login.css";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { setUser } = useUserContext();
+    const navigate = useNavigate();
 
-    const handleLogin = () => {
-        signInWithEmailAndPassword(auth, email, password);
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('/api/users/login', { email, password });
+            const user = response.data;
+
+            setUser(user);
+            navigate("/home");
+        } catch (error) {
+            alert(error.message);
+        }
     };
+
+    const isFormIncomplete = !email || !password;
+
     return (
         <div className="login">
             <img 
@@ -17,16 +32,18 @@ function Login() {
                 alt="" 
             />
             <input 
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
             />
             <input 
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-            placeholder="Password"  
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Password"  
             />
-            <button onClick={handleLogin}>Log in</button>
+            <button onClick={handleLogin} disabled={isFormIncomplete}>
+                Log in
+            </button>
         </div>
     );
 }
