@@ -9,24 +9,30 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "firebase/auth";
-import { logoutUser } from "../features/userSlice";
-import { auth } from "../firebase";
+import axios from 'axios';
+import { useUserContext } from "../features/userContext";
 
 function Sidenav() {
-    const user = useSelector((state) => state.data.user.user);
-    const dispatch = useDispatch();
-    const handleLogout = () => {
-        dispatch(logoutUser());
-        signOut(auth);
+    const { user, logoutUser } = useUserContext();
+
+    const handleLogout = async() => {
+        try {
+            await axios.post('/api/users/logout');
+            logoutUser();
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
     };
+    
+    // Verifica si 'user' es no nulo antes de acceder a sus propiedades
+    const username = user ? user.username : "Anónimo"; // o cualquier valor predeterminado
+    const firstLetter = username ? username.charAt(0).toUpperCase() : "";
 
     return (
         <div className="sidenav">
-            <img className="sidenav__logo" 
-            src="https://www.pngkey.com/png/full/828-8286178_mackeys-work-needs-no-elaborate-presentation-or-distracting.png" 
-            alt="Instagram Logo" />
+            <img className="sidenav__logo"
+                src="https://www.pngkey.com/png/full/828-8286178_mackeys-work-needs-no-elaborate-presentation-or-distracting.png"
+                alt="Instagram Logo" />
 
             <div className="sidenav__buttons">
                 <button className="sidenav__button">
@@ -68,14 +74,16 @@ function Sidenav() {
                     <Avatar>
                         {user.username ? user.username.charAt(0).toUpperCase() : "A"}
                     </Avatar>
-                    <span>
-                        {user.username}{" "}
-                        <button onClick={handleLogout} className="logout__button">
-                            Logout
-                        </button>
-                    </span>
+                <span>
+                    {user.username}{" "}
+                <button onClick={handleLogout} className="logout__button">
+                Logout
                 </button>
+                </span>
+                </button>
+
             </div>
+
             <div className="sidenav__more">
                 <button className="sidenav__button">
                     <MenuIcon />

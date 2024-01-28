@@ -1,9 +1,9 @@
-.post {
+.reel {
     width: 550px;
     margin: 30px 40px 50px 40px;
 }
 
-.post__header {
+.reel__header {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -11,36 +11,36 @@
     margin-bottom: 10px;
 }
 
-.post__headerAuthor {
+.reel__headerAuthor {
     display: flex;
     flex-direction: row;
     align-items: center;
     font-weight: bolder;
 }
 
-.post_headerAuthor > span {
+.reel_headerAuthor > span {
     color: grey;
     font-size: 15px;
 }
 
-.post__image > img {
+.reel__image > img {
     width: 100%;
     border-radius: 6px;
     border: 0.6px solid;
 }
 
-.post__footerIcons {
+.reel__footerIcons {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
 }
 
-.postIcon {
+.reelIcon {
     padding: 7px;
     font-size: 30px;
 }
 
-.postIcon:hover {
+.reelIcon:hover {
     cursor: pointer;
 }

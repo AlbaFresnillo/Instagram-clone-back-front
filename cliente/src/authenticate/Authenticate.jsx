@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./Authenticate.css";
 import Login from "./Login";
 import Signup from "./Signup";
+import { useUserContext } from "../features/userContext";
 
 function Authenticate() {
+    const { user } = useUserContext();
     const [active, setActive] = useState("login");
 
     const handleChange = () => {
