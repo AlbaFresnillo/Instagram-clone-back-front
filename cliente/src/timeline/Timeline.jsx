@@ -44,16 +44,6 @@ function Timeline() {
     // Si necesitas información del usuario actual, deberías obtenerla directamente del contexto
     const { user } = useUserContext();
 
-    /* useEffect(() => {
-        axiosConfig.get("/api/reels")
-            .then((response) => {
-                setReels(response.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching reels:", error);
-            });
-    }, []); */
-
     return (
         <div className="timeline">
             <div className="timeline__left">

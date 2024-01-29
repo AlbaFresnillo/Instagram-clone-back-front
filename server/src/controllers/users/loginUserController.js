@@ -22,7 +22,7 @@ const loginUserController = async (req,res,next) => {
         }
 
         if(!user.active){
-            pendignActivationError();
+            pendingActivationError();
         }
 
         // generamos el token

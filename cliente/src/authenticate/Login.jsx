@@ -1,4 +1,3 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { useUserContext } from "../features/userContext";
 import axios from 'axios';

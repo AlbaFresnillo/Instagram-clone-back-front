@@ -151,3 +151,19 @@ export const cannotlikeOwnReelError = () => {
         message: "Usuario pendiente de activación. Verifique su cuenta antes de continuar",
     };
 };
+
+  
+    export const successResponse = (res, message, data = null) => {
+        res.status(200).json({
+            status: 'success',
+            message,
+            data,
+        });
+    };
+
+    export const serverError = (res, message) => {
+        res.status(500).json({
+            success: false,
+            message: message || 'Internal Server Error',
+        });
+    };
