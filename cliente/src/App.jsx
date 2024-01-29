@@ -2,10 +2,10 @@ import React from 'react';
 import './App.css';
 import Homepage from "./Homepage";
 import Authenticate from "./authenticate/Authenticate";
-import { useUserContext } from './features/userContext'; // Actualizado para usar useUserContext
+import { useUserContext } from './features/userContext'; 
 
 function App() {
-  const { user, isLoading } = useUserContext(); // Actualizado para usar useUserContext
+  const { user, isLoading } = useUserContext();
     
   return (
     <div className="app">

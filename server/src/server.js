@@ -21,11 +21,29 @@ server.use(express.static(UPLOADS_DIR));
 //Middleware que desencripta un body en formato "form-data" creando la propiedad body y la propiedad files en el objeto request
 server.use(fileUpload());
 
-//middleware de rutas
-server.use(routes);
+// Middleare de registro de solicitudes
+server.use((req, res, next) => {
+    console.log(`${req.method} request received for ${req.url}`);
+    next();
+});
+
+// Middleware de rutas
+server.use('/', routes);
+
+// Mddleware de método HTTP no permitido
+server.use((err, req, res, next) => {
+    if (req.method === 'POST' && req.url === '/users/logout/' && err.status === 404) {
+        return res.status(405).json({
+            message: 'Method not allowed',
+            status: 405,
+            data: null
+        });
+    }
+    next();
+});
 
 //middleware de ruta no encontrada
-server.use(notFoundController)
+server.use(notFoundController);
 
 //middleware de manejo de errores
 server.use(errorController);

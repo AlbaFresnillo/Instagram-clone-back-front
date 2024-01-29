@@ -1,10 +1,8 @@
 import express from 'express';
-
-const router = express.Router();
-
 import { 
     newUserController,
     loginUserController,
+    logoutUserController,
     validateUserController,
     getUserProfileController,
     getOwnUserController,
@@ -13,12 +11,13 @@ import {
     editUserAvatarController,
     changeUserRoleController
 } from '../controllers/users/index.js';
-
 import{
     authUserController,
     userExistsController
 }  from '../middlewares/index.js';
- 
+
+const router = express.Router();
+
 //Crear usuario pendiente de activar 
 router.post('/api/users/register', newUserController);
 
@@ -28,6 +27,9 @@ router.get('/api/users/validate/:registrationCode', validateUserController)
 //Login de usuario
 router.post('/api/users/login', loginUserController);
 
+//Logout de usuario
+router.post('/api/users/logout', authUserController, logoutUserController);
+
 //obtener el perfil publico del usuario
 router.get('/api/user/:userId',userExistsController, getUserProfileController);
 
@@ -35,21 +37,16 @@ router.get('/api/user/:userId',userExistsController, getUserProfileController);
 router.get('/api/users',authUserController, getOwnUserController,getOwnUserController);
 
 //recuperar contraseña --> blanqueo --> envío de mail
-router.post('api/users/password/recover', sendRecoverPasswordController);
+router.post('/api/users/password/recover', sendRecoverPasswordController);
 
 //toma el codigo de recuperación enviado en el endpoint anterior y
 //actualiza la contraseña en la base de datos
-router.put('api/users/password', editUserPasswordController);
+router.put('/api/users/password', editUserPasswordController);
 
 // Editar el avatar de un usuario.
-router.put(
-    "api/users/avatar",
-    authUserController,
-    userExistsController,
-    editUserAvatarController
-  );
+router.put('/api/users/avatar', authUserController, userExistsController, editUserAvatarController);
   
-  // Cambiar el rol de un usuario
-  router.put("api/users/:userId/role", authUserController, changeUserRoleController);
+// Cambiar el rol de un usuario
+router.put('/api/users/:userId/role', authUserController, changeUserRoleController);
   
 export default router;

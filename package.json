@@ -48,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "@vitejs/plugin-react": "^4.2.1"
   }
 }

@@ -1,5 +1,6 @@
+import path from 'path';
 import getPool from './getPool.js';
-import fs from fs;
+import fs from fs/promises;
 
 const initDB = async () => {
     // Variable que almacenará una conexión con la base de datos.
@@ -11,11 +12,11 @@ const initDB = async () => {
         console.log('Borrando tablas...');
 
         // Función para borrar el contenido de la carpeta 'uploads'
-async function borrarContenidoUploads() {
-  const uploadsFolder = 'uploads'; // Ajusta la ruta según tu estructura
-  const files = await fs.promises.readdir(uploadsFolder);
+        async function borrarContenidoUploads() {
+        const uploadsFolder = 'uploads'; // Ajusta la ruta según tu estructura
+        const files = await fs.promises.readdir(uploadsFolder);
 
-  for (const file of files) {
+    for (const file of files) {
       await fs.promises.unlink(path.join(uploadsFolder, file));
   }
 
@@ -40,9 +41,9 @@ async function borrarContenidoUploads() {
             role ENUM('admin', 'normal') DEFAULT 'normal', 
             registrationCode CHAR(30),
             recoverPassCode CHAR(10),
+            sessionToken VARCHAR(255),
             createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             modifiedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
-
             )
         `);
           //Tabla de reels

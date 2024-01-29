@@ -17,7 +17,7 @@ function Sidenav() {
 
     const handleLogout = async() => {
         try {
-            await axios.post('/api/users/logout');
+            await axios.post('http://localhost:3030/users/logout');
             logoutUser();
         } catch (error) {
             console.error('Error logging out:', error);
@@ -25,7 +25,7 @@ function Sidenav() {
     };
     
     // Verifica si 'user' es no nulo antes de acceder a sus propiedades
-    const username = user ? user.username : "Anónimo"; // o cualquier valor predeterminado
+    const username = user ? user.username : "Anónimo"; 
     const firstLetter = username ? username.charAt(0).toUpperCase() : "";
 
     return (
@@ -74,14 +74,9 @@ function Sidenav() {
                     <Avatar>
                         {user.username ? user.username.charAt(0).toUpperCase() : "A"}
                     </Avatar>
-                <span>
-                    {user.username}{" "}
-                <button onClick={handleLogout} className="logout__button">
-                Logout
+                <span>{user.username}{" "}</span>
+                <button onClick={handleLogout} className="logout__button">Logout</button>
                 </button>
-                </span>
-                </button>
-
             </div>
 
             <div className="sidenav__more">

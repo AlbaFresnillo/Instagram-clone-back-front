@@ -34,7 +34,7 @@ const authUserController = async (req, res, next) => {
       // Creamos la propiedad "user" en el objeto "request" (es una propiedad inventada).
       req.user = tokenInfo;
       // Después de asignar req.user
-console.log('Información del usuario:', req.user);
+      console.log('Información del usuario:', req.user);
 
       // Pasamos el control a la siguiente función controladora.
       next();
