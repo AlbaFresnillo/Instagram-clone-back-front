@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useUserContext } from "../features/userContext";
-import axios from 'axios';
 import "./Login.css";
 import { useNavigate } from 'react-router-dom';
+import instance from '../app/axiosConfig.jsx';
 
+// Función para hacer solicitud de login
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,7 +13,7 @@ function Login() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('/api/users/login', { email, password });
+            const response = await instance.post('/api/users/login', { email, password });
             const user = response.data;
 
             setUser(user);
