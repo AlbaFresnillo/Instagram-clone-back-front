@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import instance from '../app/axiosConfig.jsx';
 
 const UserContext = createContext();
 
@@ -10,7 +10,7 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get('/api/users');
+                const response = await instance.get('/api/users');
                 const authUser = response.data;
 
                 if (authUser) {
@@ -35,7 +35,7 @@ const UserProvider = ({ children }) => {
 
     const logoutUser = async () => {
         try {
-            await axios.post('/api/users/logout');
+            await instance.post('/api/users/logout');
             setUser(null);
         } catch (error) {
             console.error('Error logging out:', error);

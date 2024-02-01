@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Signup.css";
-import axios from 'axios';
+import instance from '../app/axiosConfig.jsx';
 
 function Signup() {
     const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ function Signup() {
 
         try {
             // Envia la solicitud al servidor Node.js para crear un nuevo usuario
-            const response = await axios.post('/api/users/register', {
+            const response = await instance.post('/api/users/register', {
                 email,
                 password,
                 username,

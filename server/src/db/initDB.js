@@ -1,6 +1,6 @@
 import path from 'path';
-import getPool from './getPool.js';
-import fs from fs/promises;
+import { getPool } from './getPool.js';
+import fs from 'fs/promises';
 
 const initDB = async () => {
     // Variable que almacenará una conexión con la base de datos.
@@ -20,8 +20,8 @@ const initDB = async () => {
       await fs.promises.unlink(path.join(uploadsFolder, file));
   }
 
-  console.log('Contenido de la carpeta "uploads" borrado correctamente.');
-}
+    console.log('Contenido de la carpeta "uploads" borrado correctamente.');
+  }
 
 
        // await pool.query(
@@ -33,6 +33,7 @@ const initDB = async () => {
         await pool.query(`
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+            uuid VARCHAR(36) NOT NULL UNIQUE,
             email VARCHAR(100) UNIQUE NOT NULL,
             username VARCHAR(30) UNIQUE NOT NULL,
             password VARCHAR(100) NOT NULL,
@@ -43,7 +44,7 @@ const initDB = async () => {
             recoverPassCode CHAR(10),
             sessionToken VARCHAR(255),
             createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            modifiedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
+            modifiedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )
         `);
           //Tabla de reels

@@ -9,23 +9,25 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar } from "@mui/material";
-import axios from 'axios';
 import { useUserContext } from "../features/userContext";
+import instance from '../app/axiosConfig.jsx';
 
+
+// Función para hacer la solicitud de logout
 function Sidenav() {
     const { user, logoutUser } = useUserContext();
 
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:3030/users/logout');
+            await instance.post('/api/users/logout');
             logoutUser();
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
-    
+
     // Verifica si 'user' es no nulo antes de acceder a sus propiedades
-    const username = user ? user.username : "Anónimo"; 
+    const username = user ? user.username : "Anónimo";
     const firstLetter = username ? username.charAt(0).toUpperCase() : "";
 
     return (
@@ -70,13 +72,13 @@ function Sidenav() {
                     <span>Create</span>
                 </button>
 
-                <button className="sidenav__button">
+                <div className="sidenav__button">
                     <Avatar>
                         {user.username ? user.username.charAt(0).toUpperCase() : "A"}
                     </Avatar>
-                <span>{user.username}{" "}</span>
-                <button onClick={handleLogout} className="logout__button">Logout</button>
-                </button>
+                    <span>{user.username}{" "}</span>
+                    <button onClick={handleLogout} className="logout__button">Logout</button>
+                </div>
             </div>
 
             <div className="sidenav__more">
