@@ -15,7 +15,7 @@ function Login() {
     const handleLogin = async () => {
         // CON AXIOS
         try {
-            const response = await axios.post('/api/users/login', { email, password });
+            const response = await axios.post('http://localhost:3001/api/users/login', { email, password });
             const user = response.data;
 
             setUser(user);

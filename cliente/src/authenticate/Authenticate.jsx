@@ -5,11 +5,28 @@ import Signup from "./Signup";
 import { useUserContext } from "../features/userContext";
 
 function Authenticate() {
-    const { user } = useUserContext();
+    conole.log('Renderizando componente Authenticate...');
+    const { loginUser } = useUserContext();
     const [active, setActive] = useState("login");
 
     const handleChange = () => {
         setActive(active === "login" ? "signup" : "login");
+    };
+
+    const handleSuccessfulLogin = async (userData) => {
+        // Obtener el token del servidor
+        const token = userData.token;
+        console.log('Token guardado en el localStorage:', token);
+
+        // Guarda el token en el contexto del usuario
+        loginUser (userData);
+
+        // Guarda el token en el almacenamiento local
+        localStorage.setItem('authToken', token);
+
+        // Recupera el token
+        const storedToken = localStorage.getItem('authToken');
+        console.log('Token recuperado del localStorage:', storedToken);
     };
 
     return (
