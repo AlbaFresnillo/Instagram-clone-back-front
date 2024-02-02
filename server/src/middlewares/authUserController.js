@@ -1,12 +1,5 @@
-// Importamos las dependencias.
 import jwt from "jsonwebtoken";
-
-// Importamos los errores.
-import {
-  notAuthenticatedError,
-  invalidCredentialsError,
-} from "../services/errorService.js";
-
+import { notAuthenticatedError, invalidCredentialsError } from "../services/errorService.js";
 import { SECRET } from "../../env.js";
 
 // Función controladora intermedia que desencripta el token y crea la propiedad "req.user".
@@ -22,13 +15,15 @@ const authUserController = async (req, res, next) => {
       notAuthenticatedError();
     }
 
-    // 'Bearer "encrypted token"
-    const token = authorization.split(" ")[1];
+    let tokenInfo;
 
-    try {
-      // Variable que almacenará la info del token.
-      //console.log(SECRET);
-      const tokenInfo = jwt.verify(token, SECRET);
+      try {
+        // Variable que almacenará la info del token.
+        //console.log(SECRET);
+        const tokenInfo = jwt.verify(authorization, SECRET);
+      } catch (error) {
+        invalidCredentialsError();
+      }
 
       // Si hemos llegado hasta aquí quiere decir que el token ya se ha desencriptado.
       // Creamos la propiedad "user" en el objeto "request" (es una propiedad inventada).
@@ -40,11 +35,7 @@ const authUserController = async (req, res, next) => {
       next();
     } catch (err) {
       console.log('Error al verificar el token:',err);
-      invalidCredentialsError();
     }
-  } catch (err) {
-    next(err);
-  }
-};
-
+  };
+  
 export default authUserController;

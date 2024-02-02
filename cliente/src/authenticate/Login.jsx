@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useUserContext } from "../features/userContext";
 import "./Login.css";
 import { useNavigate } from 'react-router-dom';
-import instance from '../app/axiosConfig.jsx';
+import axios from "axios";
+// import { loginUser } from "../app/firebaseConfig";
 
 // Función para hacer solicitud de login
 function Login() {
@@ -12,8 +13,9 @@ function Login() {
     const navigate = useNavigate();
 
     const handleLogin = async () => {
+        // CON AXIOS
         try {
-            const response = await instance.post('/api/users/login', { email, password });
+            const response = await axios.post('/api/users/login', { email, password });
             const user = response.data;
 
             setUser(user);
@@ -22,7 +24,20 @@ function Login() {
             alert(error.message);
         }
     };
+    
+        /* CON FIREBASE
+        try {
+            // Usa la función de inicio de sesión de Firebase
+            const user = await loginUser(email, password);
 
+            // Usuario autenticado exitosamente
+            setUser(user);
+            navigate("/home");
+        } catch (error) {
+            alert(error.message);
+        }
+    }; */
+    
     const isFormIncomplete = !email || !password;
 
     return (

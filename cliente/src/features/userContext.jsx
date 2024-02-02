@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import instance from '../app/axiosConfig.jsx';
+import axios from 'axios';
+// import { onAuthStateChanged } from 'firebase/auth';
+// import { getAuth } from 'firebase/auth';
+// import { logoutUser } from '../app/firebaseConfig';
 
 const UserContext = createContext();
 
@@ -7,10 +10,11 @@ const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // CON AXIOS
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await instance.get('/api/users');
+                const response = await axios.get('/api/users');
                 const authUser = response.data;
 
                 if (authUser) {
@@ -40,7 +44,26 @@ const UserProvider = ({ children }) => {
         } catch (error) {
             console.error('Error logging out:', error);
         }
-    };
+    }; 
+
+    /* CON FIREBASE
+    useEffect(() => {
+        const auth = getAuth();
+
+        const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+            if (authUser) {
+                setUser({
+                    uid: authUser.uid,
+                    email: authUser.email,
+                });
+            } else {
+                setUser(null);
+            }
+            setIsLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []); */
     
     const contextValue = {
         user,
