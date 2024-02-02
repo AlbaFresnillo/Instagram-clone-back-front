@@ -10,22 +10,34 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar } from "@mui/material";
 import { useUserContext } from "../features/userContext";
-import instance from '../app/axiosConfig.jsx';
+import axios from "axios";
+// import { logoutUser } from "../app/firebaseConfig";
 
 
 // Función para hacer la solicitud de logout
 function Sidenav() {
     const { user, logoutUser } = useUserContext();
 
+    // CON AXIOS
     const handleLogout = async () => {
         try {
-            await instance.post('/api/users/logout');
+            await axios.post('/api/users/logout');
             logoutUser();
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
 
+    /* CON FIREBASE
+    const handleLogout = async () => {
+        try {
+            // Usa la función de logout de Firebase
+            await logoutUser();
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    }; */
+    
     // Verifica si 'user' es no nulo antes de acceder a sus propiedades
     const username = user ? user.username : "Anónimo";
     const firstLetter = username ? username.charAt(0).toUpperCase() : "";

@@ -1,80 +1,55 @@
-import bcrypt from "bcrypt";
-import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
 import { getPool } from '../../db/getPool.js';
 import sendMailUtil from '../../util/sendMailUtil.js';
-
-import {
-    emailAlreadyRegisteredError,
-    userAlreadyRegisteredError
-} from '../../services/errorService.js';
-
-async function sendActivationEmail(email, username, registrationCode) {
-    const emailSubject = 'Activa tu usuario de INSTAHAB';
-    const emailBody = `
-    👋 ¡Bienvenid@ ${username}!
-
-    Gracias por registrarte en 📷 INSTAHAB. Para activar tu cuenta, haz click en el siguiente enlace:
-
-    <a href="http://localhost:3001/users/auth/activate/${registrationCode}">❤️ Activar mi cuenta ❤️</a>
-    `;
-
-    try {
-        await sendMailUtil(email, emailSubject, emailBody);
-        console.log("Correo de activación enviado con éxito a:", email);
-    } catch (error) {
-        console.error('Error al enviar el correo de activación:', error);
-        throw error; // Puedes decidir si lanzar el error o manejarlo de otra manera
-    }
-}
+import { emailAlreadyRegisteredError, userAlreadyRegisteredError } from '../../services/errorService.js';
 
 const insertUserModel = async (username, email, password, registrationCode) => {
-    const userUuid = uuidv4();
+    const pool = await getPool();
 
-    try {
-        console.log("insert", username, email, password, registrationCode);
-        const pool = await getPool();
-        
-        let [users] = await pool.query(
-            `
-                SELECT id FROM users WHERE username = ?
-            `,
-            [username]
-        );
+    let [user] = await pool.query(
+        `
+            SELECT id FROM users WHERE username = ?
+        `,
+        [username]
+    );
 
-        if(users.length > 0) {
-            userAlreadyRegisteredError();
-        }
+    if(user.length){
+        userAlreadyRegisteredError();
+    };
 
-        [users] = await pool.query(
-            `
-                SELECT id FROM users WHERE email = ?
-            `,
-            [email]
-        );
+    [user] = await pool.query(
+        `
+            SELECT id FROM users WHERE email = ?
+        `,
+        [email]
+    );
 
-        if(users.length > 0) {
-            emailAlreadyRegisteredError();
-        }
+    if(user.length){
+        emailAlreadyRegisteredError();
+    };
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+    /**hacer logica de envio de email */
+    const emailSubject = 'Activa tu usuario de INSTAHAB';
 
-        await pool.query(
-            `
-                INSERT INTO users ( uuid, email, username, password, registrationCode)
-                VALUES (?, ?, ?, ?, ?)
-            `,
-            [userUuid, email, username, hashedPassword, registrationCode]
-        );
+    const emailBody = `
+    👋 !!!Bienvenid@ ${username}¡¡¡¡¡👋
 
-        console.log("Usuario registrado con éxito");
+            Gracias por registrarse en  📷 INSTAHAB. Para activar tu cuenta haga click en el siguiente enlace:
 
-        // Enviar el correo electrónico de activación
-        await sendActivationEmail(email, username, registrationCode);
+            <a href="http://localhost:3001/api/users/validate/${registrationCode}">❤️ Activar mi cuenta ❤️ </a>
+    `;
 
-    } catch (error) {
-        console.error('Error en insertUserModel:', error);
-        throw error; // Lanza el error para que pueda ser manejado más arriba en la cadena
-    }
+    await sendMailUtil(email,emailSubject,emailBody);
+
+    const hashedPassword = await bcrypt.hash(password,10);
+
+    await pool.query(
+        `
+            INSERT INTO users (username, email, password, registrationCode)
+            VALUES (?,?,?,?)
+        `,
+        [username, email, hashedPassword, registrationCode]
+    );
 };
 
 export default insertUserModel;

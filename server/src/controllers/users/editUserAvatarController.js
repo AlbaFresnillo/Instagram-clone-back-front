@@ -1,51 +1,27 @@
-// Importamos los modelos.
+import selectUserByIdModel from "../../models/users/selectUserByIdModel.js";
 import updateUserAvatarModel from '../../models/users/updateUserAvatarModel.js';
-
-// Importamos los servicios.
-import {
-    cloudinaryService
-} from '../../services/cloudinaryService.js';
-
-// Importamos los servicios.
 import validateSchemaUtil from '../../util/validateSchemaUtil.js';
-
-// Importamos el esquema.
 import editUserAvatarSchema from '../../schemas/users/editUserAvatarSchema.js';
+import { deletePhotoService, savePhotoService } from "../../services/photoService.js";
 
 const editUserAvatarController = async (req, res, next) => {
     try {
-        // Verificar si hay un archivo cargado
-        if (!req.files || !req.files.avatar) {
-            return res.status(400).send({ message: 'No se encontró el archivo del avatar.' });
-        }
+        const user = await selectUserByIdModel(req.user.id);
 
-        const avatarFile = req.files.avatar;
+        if (user.avatar) await deletePhotoService(user.avatar);
 
-        // Crear un objeto que coincida con la estructura esperada por el esquema Joi
-        const fileDataForValidation = {
-            name: avatarFile.name,
-            mimetype: avatarFile.mimetype,
-            size: avatarFile.size,
-        };
+        const avatarName = await savePhotoService(req.files.avatar, 100);
 
-        // Validar el archivo con Joi
-        await validateSchemaUtil(editUserAvatarSchema, { avatar: fileDataForValidation });
-        
-        // Procesar y guardar el archivo
-        const avatarImg = await cloudinaryService(avatarFile);
-
-        // Actualizar la información del usuario en la base de datos
-        await updateUserAvatarModel(avatarImg, req.user.id);
+        await updateUserAvatarModel(avatarName, req.user.id);
 
         res.send({
             status: 'ok',
-            message: 'Usuario actualizado',
-            avatar: avatarImg
+            message: 'Avatar actualizado correctamente',
         });
-    } catch (err) {
-        next(err);
-    }
-};
 
+    } catch (error) {
+        next(error);
+    }
+}
 
 export default editUserAvatarController;

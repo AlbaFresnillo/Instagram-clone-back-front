@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Signup.css";
-import instance from '../app/axiosConfig.jsx';
+import axios from 'axios';
+// import { registerUser } from "../app/firebaseConfig";
 
 function Signup() {
     const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ function Signup() {
     const handleSignUp = async (event) => {
         event.preventDefault();
 
+        // CON AXIOS
         if (!email || !password || !username) {
             setError("All fields are required.");
             return;
@@ -18,7 +20,7 @@ function Signup() {
 
         try {
             // Envia la solicitud al servidor Node.js para crear un nuevo usuario
-            const response = await instance.post('/api/users/register', {
+            const response = await axios.post('/api/users/register', {
                 email,
                 password,
                 username,
@@ -36,6 +38,24 @@ function Signup() {
             setError(error.message || 'Signup failed');
         }
     };
+    
+
+    /* CON FIREBASE
+    if (!email || !password || !username) {
+        setError("All fields are required.");
+        return;
+    }
+
+    try {
+        // Usa la función de registro de usuario de Firebase
+        await registerUser(email, password);
+
+        // Usuario creado exitosamente
+        console.log('User created successfully');
+    } catch (error) {
+        setError(error.message || 'Signup failed');
+    }
+    }; */
 
     return (
         <div className="signup">

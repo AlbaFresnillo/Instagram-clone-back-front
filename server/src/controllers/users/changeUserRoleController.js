@@ -1,4 +1,3 @@
-// controllers/users/changeUserRoleController.js
 import updateUserRoleModel from '../../models/users/updateUserRoleModel.js';
 import { adminOnlyError } from '../../services/errorService.js';
 

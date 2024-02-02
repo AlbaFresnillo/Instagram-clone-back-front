@@ -4,20 +4,25 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import routes from './routes/index.js';
 import { PORT, UPLOADS_DIR } from '../env.js';
-import dotenv from 'dotenv';
 import listEndpoints from 'express-list-endpoints';
 import { errorController, notFoundController } from './middlewares/index.js';
 import { testDatabaseConnection } from './db/getPool.js'; 
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const server = express();
 
+server.use(cors()); // Acepta pedidos desde cualquier IP
 server.use(morgan('dev'));
 server.use(express.json());
-server.use(cors()); // Acepta pedidos desde cualquier IP
 server.use(express.static(UPLOADS_DIR));
-server.use(fileUpload());
+
+// Middleware que "desencripta" un body en formato "form-data" creando la propiedad
+// "body" y la propiedad "files" en el objeto "request"
+server.use(fileUpload({ useTempFiles: true }));
 
 // Middleware de registro de solicitudes
 server.use((req, res, next) => {
@@ -27,18 +32,6 @@ server.use((req, res, next) => {
 
 // Middleware de rutas
 server.use('/', routes);
-
-// Middleware de método HTTP no permitido
-server.use((err, req, res, next) => {
-    if (req.method === 'POST' && req.url === '/users/logout/' && err.status === 404) {
-        return res.status(405).json({
-            message: 'Method not allowed',
-            status: 405,
-            data: null
-        });
-    }
-    next();
-});
 
 // Middleware de ruta no encontrada
 server.use(notFoundController);

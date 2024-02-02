@@ -14,7 +14,7 @@ const sendRecoverPasswordController = async (req,res,next) => {
 
         const recoverPassCode = randomstring.generate(10);
 
-        await updateRecoverPassModel(email, recoverPassCode);
+        await updateRecoverPasswordModel(email, recoverPassCode);
 
         res.send({
             status: 'ok',

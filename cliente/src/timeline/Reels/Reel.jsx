@@ -1,6 +1,6 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Avatar } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import "./Reel.css";  
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -8,8 +8,21 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { useUserContext } from "../../features/userContext";
 
-function Reel({ user, postImage, likes, timestamp }) {
-    //const { user } = useUserContext();
+function Reel({ user, postImage, initialLikes, timestamp }) {
+    const { user: currentUser } = useUserContext();
+    const [likes, setLikes] = useState(initialLikes);
+    const [liked, setLiked] = useState(false);
+        
+    // Lógica para manejar me gusta
+    const handleLikeClick = () => {
+        if (!liked) {
+            setLikes(likes + 1);
+            setLiked(true);
+        } else {
+            setLikes(likes - 1);
+            setLiked(false);
+        }
+    };
 
     return (
         <div className="reel">

@@ -1,4 +1,3 @@
-import path from 'path';
 import { getPool } from './getPool.js';
 import fs from 'fs/promises';
 
@@ -12,28 +11,39 @@ const initDB = async () => {
         console.log('Borrando tablas...');
 
         // Función para borrar el contenido de la carpeta 'uploads'
-        async function borrarContenidoUploads() {
-        const uploadsFolder = 'uploads'; // Ajusta la ruta según tu estructura
-        const files = await fs.promises.readdir(uploadsFolder);
+        const borrarContenidoUploads = async () => {
+          try {
+            // Verificar si el directorio uploads existe
+            await fs.access('uploads', fs.constants.F_OK);
+          } catch (error) {
+            // Si el directorio uploads no existe, creálo
+            await fs.mkdir('uploads');
+            console.log('Created "uploads" directory.');
+            return;
+          }
+        
+          // Si el directorio existe, procede a eliminar su contenido
+          const files = await fs.readdir('uploads');
+        
+          for (const file of files) {
+            await fs.unlink(path.join('uploads', file));
+          }
+        
+          console.log('Contenido de la carpeta "uploads" borrado correctamente.');
+        };
+        
+        borrarContenidoUploads();
 
-    for (const file of files) {
-      await fs.promises.unlink(path.join(uploadsFolder, file));
-  }
 
-    console.log('Contenido de la carpeta "uploads" borrado correctamente.');
-  }
-
-
-       // await pool.query(
-           // 'DROP TABLE IF EXISTS likes, reelPhotos, reels, users'
-      //  );
+       await pool.query(
+            'DROP TABLE IF EXISTS comments, likes, reelPhotos, reels, users'
+       );
 
         console.log('Creando tablas...');
         //Tabla de usuarios
         await pool.query(`
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-            uuid VARCHAR(36) NOT NULL UNIQUE,
             email VARCHAR(100) UNIQUE NOT NULL,
             username VARCHAR(30) UNIQUE NOT NULL,
             password VARCHAR(100) NOT NULL,
@@ -42,11 +52,11 @@ const initDB = async () => {
             role ENUM('admin', 'normal') DEFAULT 'normal', 
             registrationCode CHAR(30),
             recoverPassCode CHAR(10),
-            sessionToken VARCHAR(255),
             createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            modifiedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            modifiedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
             )
         `);
+        
           //Tabla de reels
         await pool.query(`
         CREATE TABLE IF NOT EXISTS reels (
