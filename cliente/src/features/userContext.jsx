@@ -39,7 +39,7 @@ const UserProvider = ({ children }) => {
 
     const logoutUser = async () => {
         try {
-            await instance.post('/api/users/logout');
+            await axios.post('/api/users/logout');
             setUser(null);
         } catch (error) {
             console.error('Error logging out:', error);

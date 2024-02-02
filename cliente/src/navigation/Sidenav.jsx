@@ -21,8 +21,28 @@ function Sidenav() {
     // CON AXIOS
     const handleLogout = async () => {
         try {
-            await axios.post('/api/users/logout');
+            // Obtener el token del almacenamiento local
+            const token = localStorage.getItem('authToken');
+            console.log('Token en Sidenav:', token);
+            
+            // Si no hay token
+            if (!token) {
+                console.error('No hay un token de autenticación');
+                return;
+            }
+
+            // Hacer la solicitud de cierre de sesión con el token
+            await axios.post('http://localhost:3001/api/users/logout',{}, {
+                headers: {
+                    Authorization: token,
+                },
+            });
+
+            // Limpiar el token del contexto del usuario
             logoutUser();
+
+            // Limpiar el token del almacenamiento local
+            localStorage.removeItem('authToken');
         } catch (error) {
             console.error('Error logging out:', error);
         }
