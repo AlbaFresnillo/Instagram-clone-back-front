@@ -52,6 +52,7 @@ const initDB = async () => {
             role ENUM('admin', 'normal') DEFAULT 'normal', 
             registrationCode CHAR(30),
             recoverPassCode CHAR(10),
+            sessionToken VARCHAR(255), 
             createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             modifiedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
             )
