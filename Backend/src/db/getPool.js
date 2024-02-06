@@ -1,0 +1,54 @@
+import mysql from "mysql2/promise.js";
+
+// Obtenemos las variables de entorno necesarias mediante destructuring.
+import { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } from "../../env.js";
+// Variable que almacená un grupo (array) de conexiones.
+let pool;
+
+// Función que retorna un pool de conexiones con la base de datos.
+const getPool = async () => {
+  try {
+    // Si la variable "pool" es undefined...
+    if (!pool) {
+      // Creamos una pool temporal.
+      const poolTemp = mysql.createPool({
+        host: MYSQL_HOST,
+        user: MYSQL_USER,
+        password: MYSQL_PASSWORD,
+      });
+     
+      // Con el pool temporal creamos la base de datos si no existe.
+      await poolTemp.query(`CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE}`);
+
+      // Creamos un grupo de conexiones.
+      pool = mysql.createPool({
+        connectionLimit: 10,
+        host: MYSQL_HOST,
+        user: MYSQL_USER,
+        password: MYSQL_PASSWORD,
+        database: MYSQL_DATABASE,
+        timezone: "Z",
+      });
+    }
+
+    // Retornamos un pool.
+    return pool;
+  } catch (err) {
+     // Manejar el error específico y lanzar una excepción para ser capturada por el llamador.
+     console.error('Error al obtener el pool de conexiones:', err);
+     throw new Error('Error al obtener el pool de conexiones.');
+  }
+};
+// Función para probar la conexión a la base de datos.
+const testDatabaseConnection = async () => {
+  try {
+    const pool = await getPool();
+    const [rows] = await pool.query('SELECT 1 + 1 AS result');
+    console.log('Resultado de la prueba de conexión a la base de datos:', rows);
+  } catch (err) {
+    console.error('La prueba de conexión a la base de datos falló:', err);
+  }
+};
+
+// Exportamos la función.
+export { getPool, testDatabaseConnection };
