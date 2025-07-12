@@ -24,8 +24,13 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+<<<<<<< HEAD
     "install": "cd backend && npm i && cd ../frontend && npm i",
     "start": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+=======
+    "install": "cd server && npm i && cd ../cliente && npm i",
+    "start": "concurrently \"cd server && npm run dev\" \"cd cliente && npm run dev\"",
+>>>>>>> 50885c1238ed520d688742c49f8a37d9d43ddb0c
     "seed": "cd server && npm run initDb",
     "build": "cd cliente && npm run build, vite build",
     "dev": "vite",
@@ -60,7 +65,11 @@
     "@types/randomstring": "^1.1.11",
     "@types/sinon": "^17.0.3",
     "@types/uuid": "^9.0.8",
+<<<<<<< HEAD
     "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.2"
+=======
+    "@vitejs/plugin-react": "^4.2.1"
+>>>>>>> 50885c1238ed520d688742c49f8a37d9d43ddb0c
   }
 }

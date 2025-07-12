@@ -17,6 +17,11 @@ export const logInUserService = async ({ email, password }) => {
   return response.data;
 };
 
+export const logOutUserService = async () => {
+  const response = await axios.post(`/api/users/logout`);
+  return response.data;
+};
+
 export const getMyDataService = async (token) => {
   const response = await axios.get(`/api/users`, { headers: { Authorization: token } });
   return response.data;
@@ -52,8 +57,8 @@ export const recoverPasswordService = async ({ email }) => {
   return response.data;
 };
 
-export const sendReelService = async () => {
-  const response = await axios.post(`/api/reel`);
+export const getAllReelsService = async () => {
+  const response = await axios.get(`/api/reel`);
   return response.data;
 };
 

@@ -69,7 +69,6 @@ const initDB = async () => {
           FOREIGN KEY (userId) REFERENCES users(id)
           )
         `);
-        
           //Tabla de fotos
         await pool.query(`
         CREATE TABLE IF NOT EXISTS reelPhotos (

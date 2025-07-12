@@ -2,7 +2,7 @@
 
 - BASE DE DATOS SQL:
 MYSQL_HOST=localhost
-MYSQL_USER=root
+MYSQL_USER=fresnilloarevaloalba@gmail.com
 MYSQL_PASSWORD=a1234567
 MYSQL_DATABASE=instahab
 

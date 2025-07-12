@@ -1,4 +1,10 @@
-import { getPool } from '../../db/getPool.js';
+// Importamos las dependencias.
+import { v4 as uuid } from 'uuid';
+
+// Importamos la función que devuelve una conexión con la base de datos.
+import { getPool } from '../../db/getPool.js';
+
+// Importamos los errores.
 import { likeAlreadyExistsError } from '../../services/errorService.js';
 
 // Función que realiza una consulta a la base de datos para votar una entrada.
@@ -21,7 +27,7 @@ const insertLikeModel = async (value, reelId, userId) => {
     // Insertamos el voto.
     await pool.query(
         `INSERT INTO likes(id, value, reelId, userId) VALUES(?, ?, ?, ?)`,
-        [id(), value, reelId, userId]
+        [uuid(), value, reelId, userId]
     );
 
   // Obtenemos la suma de votos.

@@ -10,6 +10,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar } from "@mui/material";
 import { useUserContext } from "../userContext/userContext";
+import axios from "axios";
 
 // Función para hacer la solicitud de logout
 function Sidenav() {
